@@ -38,6 +38,8 @@ int main(int argc, char *argv[])
 
     qInstallMessageHandler(myMessageOutput);
 
+    // test modification
+
     if ( argc == 2 ) {
         QString arg = argv[1];
         if ( arg.toLower() == "showconfig" ) {
