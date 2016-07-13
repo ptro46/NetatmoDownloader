@@ -1,0 +1,32 @@
+{
+    "account" : {
+        "login" : "HERE_YOUR_NETATMO_LOGIN",
+        "password" : "YOUR_NETATMO_PASSWORD",
+        "clientId" : "YOUR_NETATMO_CLIENT_ID",
+        "clientSecret" : "YOUR_NETATMO_CLIENT_SECRET",
+        "dbName" : "netatmo.sqlite",
+        "mainDevice" : "YOUR_MAIN_DEVICE_ID
+    },
+    "devices" : [
+        {
+            "sql_prefix" : "rain_",
+            "type" : "rain"
+        } ,
+        {
+            "sql_prefix" : "wind_",
+            "type" : "wind"
+        } ,
+        {
+            "sql_prefix" : "main_",
+            "type" : "main"
+        } ,
+        {
+            "sql_prefix" : "outdoor_",
+            "type" : "outdoor"
+        } ,
+        {
+            "sql_prefix" : "indoor_",
+            "type" : "indoor"
+        }
+    ]
+}
