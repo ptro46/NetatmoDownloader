@@ -129,31 +129,40 @@ private:
 
     QString                                         m_token;
 
+    int                                             m_limitCount;
+
     //---
     //  Pluviometrie
     int                                             m_pluviometrieRequestsCount;
     int                                             m_maxPluviometrieRequests;
+    bool                                            m_bCanContinueWithRain;
 
     //---
     //  Indoor Device
     int                                             m_deviceInDoorRequestsCount;
     int                                             m_maxDeviceInDoorRequests;
+    bool                                            m_bCanContinueWithInDoor;
 
     //---
     //  Outdoor Device
     int                                             m_deviceOutDoorRequestsCount;
     int                                             m_maxDeviceOutDoorRequests;
+    bool                                            m_bCanContinueWithOutDoor;
 
     //---
     //  Wind Device
     int                                             m_deviceWindRequestsCount;
     int                                             m_maxDeviceWindRequests;
+    bool                                            m_bCanContinueWithWind;
 
     //---
     //  Additionnal Indoor Device
     int                                             m_deviceAddInDoorRequestsCount;
     int                                             m_maxDeviceAddInDoorRequests;
+    int                                             m_bCanContinueWithAddInDoor;
 
+    void    endTaskOrContinue();
+    void    initCounters();
     QString normName(QString moduleName) const ;
 
     void onNetatmoStationsDataShowConfig(int httpCode,QByteArray& contentResult ) ;

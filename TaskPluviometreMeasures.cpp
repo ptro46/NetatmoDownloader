@@ -116,6 +116,12 @@ TaskBotGetMeasures::onNetatmoPluviometrieSucceeded(int httpCode,QByteArray& cont
     currentDateTime = QDateTime::currentDateTime();
     uint t = currentDateTime.toTime_t();
 
+    if ( lastTimestamp <= t - 3600 * 12 ) {
+        m_bCanContinueWithRain = true;
+    } else {
+        m_bCanContinueWithRain = false;
+    }
+
     if ( (lastTimestamp <= t - 3600 * 12) && (m_pluviometrieRequestsCount < m_maxPluviometrieRequests) ) {
         cout << gConfig.getModuleNetatmoRain()->id().toStdString() << "    Get next rain measures from " << gConfig.getModuleNetatmoRain()->startDate() << endl ;
         m_pNetatmoPluviometrieWS = QSharedPointer<NetatmoGetPluviometrieWS>( new NetatmoGetPluviometrieWS(m_token,
@@ -170,10 +176,8 @@ TaskBotGetMeasures::onNetatmoPluviometrieSucceeded(int httpCode,QByteArray& cont
             m_pNetatmoModuleAdditionnelWS->start();
 
         } else {
-            m_currentBotLogs.stop_timestamp = t;
-            persistCurrentLogs();
+            endTaskOrContinue();
 
-            emit finished();
         }
     }
 }

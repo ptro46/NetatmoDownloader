@@ -182,6 +182,13 @@ TaskBotGetMeasures::onNetatmoDeviceMeasuresSucceeded(int httpCode,QByteArray& co
 
     currentDateTime = QDateTime::currentDateTime();
     uint t = currentDateTime.toTime_t();
+
+    if ( lastTimestamp <= t - 3600 * 12 ) {
+        m_bCanContinueWithInDoor = true;
+    } else {
+        m_bCanContinueWithInDoor = false;
+    }
+
     if ( (lastTimestamp <= t - 3600 * 12) && (m_deviceInDoorRequestsCount < m_maxDeviceInDoorRequests) ) {
         cout <<  gConfig.getModuleNetatmoMain()->id().toStdString() << "    Get next indoor measures from " << gConfig.getModuleNetatmoMain()->startDate() << endl ;
         m_pNetatmoDeviceWS = QSharedPointer<NetatmoGetDeviceMeasuresWS>( new NetatmoGetDeviceMeasuresWS(m_token,

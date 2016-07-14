@@ -46,24 +46,8 @@ TaskBotGetMeasures::TaskBotGetMeasures(bool showConfig, QString configFileName, 
 
     cout << "Using " << m_configFileName.toStdString() << endl ;
 
-    //---
-    //   only for tests
-    m_maxPluviometrieRequests = 3 ;
-    m_pluviometrieRequestsCount = 0 ;
-
-    m_maxDeviceInDoorRequests = 3 ;
-    m_deviceInDoorRequestsCount = 0 ;
-
-    m_maxDeviceOutDoorRequests = 3 ;
-    m_deviceOutDoorRequestsCount = 0 ;
-
-    m_maxDeviceWindRequests = 3 ;
-    m_deviceWindRequestsCount = 0 ;
-
-    m_maxDeviceAddInDoorRequests = 3 ;
-    m_deviceAddInDoorRequestsCount = 0 ;
-    //   only for tests
-    //---
+    m_limitCount = 0 ;
+    initCounters();
 
     gConfig.loadConfig(m_configFileName);
     cout << gConfig << endl ;
@@ -80,6 +64,31 @@ TaskBotGetMeasures::~TaskBotGetMeasures() {
     }
     QSqlDatabase::removeDatabase("QSQLITE");
 }
+
+void
+TaskBotGetMeasures::initCounters() {
+    m_maxPluviometrieRequests = 3 ;
+    m_pluviometrieRequestsCount = 0 ;
+
+    m_maxDeviceInDoorRequests = 3 ;
+    m_deviceInDoorRequestsCount = 0 ;
+
+    m_maxDeviceOutDoorRequests = 3 ;
+    m_deviceOutDoorRequestsCount = 0 ;
+
+    m_maxDeviceWindRequests = 3 ;
+    m_deviceWindRequestsCount = 0 ;
+
+    m_maxDeviceAddInDoorRequests = 3 ;
+    m_deviceAddInDoorRequestsCount = 0 ;
+
+    m_bCanContinueWithRain = false ;
+    m_bCanContinueWithInDoor = false ;
+    m_bCanContinueWithOutDoor = false ;
+    m_bCanContinueWithWind = false ;
+    m_bCanContinueWithAddInDoor = false ;
+}
+
 
 void
 TaskBotGetMeasures::run() {

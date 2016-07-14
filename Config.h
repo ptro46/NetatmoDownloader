@@ -83,6 +83,7 @@ private:
     QString                                 m_clientSecret;
     QString                                 m_dbName;
     QString                                 m_mainDeviceId;
+    int                                     m_limit;
 
     int                                     m_indexMainDevice;
     int                                     m_indexOutdoorModule;
@@ -116,6 +117,7 @@ public:
     QString                         getClientSecret() const ;
     QString                         getDbName() const ;
     QString                         getMainDeviceId() const ;
+    int                             getLimit() const ;
 
     void                            setModuleNetatmoMain(QSharedPointer<ConfigModule> from, QString id, QString name, long startDate);
     QSharedPointer<ConfigModule>    getModuleNetatmoMain() const ;
@@ -184,6 +186,12 @@ inline
 QString
 Config::getMainDeviceId() const {
     return m_mainDeviceId;
+}
+
+inline
+int
+Config::getLimit() const {
+    return m_limit;
 }
 
 inline

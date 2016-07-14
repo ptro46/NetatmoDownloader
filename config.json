@@ -5,7 +5,10 @@
         "clientId" : "YOUR_NETATMO_CLIENT_ID",
         "clientSecret" : "YOUR_NETATMO_CLIENT_SECRET",
         "dbName" : "netatmo.sqlite",
-        "mainDevice" : "YOUR_MAIN_DEVICE_ID
+        "mainDevice" : "YOUR_MAIN_DEVICE_ID"
+    },
+    "downloader" : {
+        "limit" : 5
     },
     "devices" : [
         {

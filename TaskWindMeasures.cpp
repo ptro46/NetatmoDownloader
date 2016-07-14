@@ -165,6 +165,12 @@ TaskBotGetMeasures::onNetatmoWindSucceeded(int httpCode,QByteArray& contentResul
     currentDateTime = QDateTime::currentDateTime();
     uint t = currentDateTime.toTime_t();
 
+    if ( lastTimestamp <= t - 3600 * 12 ) {
+        m_bCanContinueWithWind = true;
+    } else {
+        m_bCanContinueWithWind = false;
+    }
+
     if ( (lastTimestamp <= t - 3600 * 12) && (m_deviceWindRequestsCount < m_maxDeviceWindRequests) ) {
         cout << "    Get next wind measures from " << gConfig.getModuleNetatmoWind()->startDate() << endl ;
         m_pNetatmoWindWS = QSharedPointer<NetatmoGetWindWS>( new NetatmoGetWindWS(m_token,
@@ -198,10 +204,7 @@ TaskBotGetMeasures::onNetatmoWindSucceeded(int httpCode,QByteArray& contentResul
             m_pNetatmoModuleAdditionnelWS->start();
 
         } else {
-            m_currentBotLogs.stop_timestamp = t;
-            persistCurrentLogs();
-
-            emit finished();
+            endTaskOrContinue();
 
         }
     }

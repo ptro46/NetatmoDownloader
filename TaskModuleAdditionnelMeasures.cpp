@@ -138,6 +138,7 @@ TaskBotGetMeasures::onNetatmoModuleAdditionnelSucceeded(int httpCode,QByteArray&
         moduleLogs->end_timestamp = lastTimestamp;
         moduleLogs->nb_measures_inserted += realCount ;
         m_currentBotLogs.opt_module_count = moduleLogs->nb_measures_inserted;
+
     }
 
     QDateTime dFirst = QDateTime::fromTime_t(firstTimestamp);
@@ -149,6 +150,13 @@ TaskBotGetMeasures::onNetatmoModuleAdditionnelSucceeded(int httpCode,QByteArray&
 
     currentDateTime = QDateTime::currentDateTime();
     uint t = currentDateTime.toTime_t();
+
+    if ( lastTimestamp <= t - 3600 * 12 ) {
+        m_bCanContinueWithAddInDoor = true;
+    } else {
+        m_bCanContinueWithAddInDoor = false;
+    }
+
     if ( (lastTimestamp <= t - 3600 * 12) && (m_deviceAddInDoorRequestsCount < m_maxDeviceAddInDoorRequests) ) {
         cout << "currentIndex(" << currentModuleIndex << "/" << gConfig.getModuleNetatmoIndoorSize() << ")" << endl ;
         cout << gConfig.getModuleNetatmoIndoor(currentModuleIndex)->id().toStdString() << "    Get next indoor measures from " << gConfig.getModuleNetatmoIndoor(currentModuleIndex)->startDate() << endl ;
@@ -178,11 +186,9 @@ TaskBotGetMeasures::onNetatmoModuleAdditionnelSucceeded(int httpCode,QByteArray&
                                                                                                                               nextModuleIndex,
                                                                                                                               this) );
             m_pNetatmoModuleAdditionnelWS->start();
-        } else {
-            m_currentBotLogs.stop_timestamp = t;
-            persistCurrentLogs();
 
-            emit finished();
+        } else {
+            endTaskOrContinue();
 
         }
 

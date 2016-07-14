@@ -133,6 +133,13 @@ TaskBotGetMeasures::onNetatmoModuleMeasuresSucceeded(int httpCode,QByteArray& co
 
     currentDateTime = QDateTime::currentDateTime();
     uint t = currentDateTime.toTime_t();
+
+    if ( lastTimestamp <= t - 3600 * 12 ) {
+        m_bCanContinueWithOutDoor = true;
+    } else {
+        m_bCanContinueWithOutDoor = false;
+    }
+
     if ( (lastTimestamp <= t - 3600 * 12) && (m_deviceOutDoorRequestsCount < m_maxDeviceOutDoorRequests) ) {
         cout << gConfig.getModuleNetatmoOutdoor()->id().toStdString() << "    Get next outdoor measures from " << gConfig.getModuleNetatmoOutdoor()->startDate() << endl ;
         m_pNetatmoModulesWS = QSharedPointer<NetatmoGetModuleMeasuresWS>( new NetatmoGetModuleMeasuresWS(m_token,
@@ -210,10 +217,8 @@ TaskBotGetMeasures::onNetatmoModuleMeasuresSucceeded(int httpCode,QByteArray& co
             m_pNetatmoModuleAdditionnelWS->start();
 
         } else {
-            m_currentBotLogs.stop_timestamp = t;
-            persistCurrentLogs();
+            endTaskOrContinue();
 
-            emit finished();
         }
 
     }
@@ -230,3 +235,61 @@ TaskBotGetMeasures::onNetatmoModuleMeasuresFailed(int httpCode,QByteArray& conte
 
     emit finished();
 }
+
+#define SLEEP_TIME_TWO_TASKS (10)
+
+void
+TaskBotGetMeasures::endTaskOrContinue() {
+    if ( gConfig.getLimit() > 0 ) {
+        m_limitCount++;
+
+        if ( m_limitCount < gConfig.getLimit() ) {
+            initCounters();
+
+            cout << endl << endl << "Pass " << (m_limitCount+1) << "/" << gConfig.getLimit() << " sleep " << SLEEP_TIME_TWO_TASKS << " seconds" << endl ;
+            QThread::sleep(SLEEP_TIME_TWO_TASKS);
+            cout << gConfig.getModuleNetatmoMain()->id().toStdString() << " Get initial indoor measures from " << gConfig.getModuleNetatmoMain()->startDate() << endl ;
+            m_pNetatmoDeviceWS = QSharedPointer<NetatmoGetDeviceMeasuresWS>( new NetatmoGetDeviceMeasuresWS(m_token,
+                                                                                                            gConfig.getModuleNetatmoMain()->startDate(),
+                                                                                                            gConfig.getModuleNetatmoMain()->id(),
+                                                                                                            this) );
+
+            m_pNetatmoDeviceWS->start();
+
+        } else {
+            m_currentBotLogs.stop_timestamp = QDateTime::currentDateTime().toTime_t();
+            persistCurrentLogs();
+
+            emit finished();
+
+        }
+    } else {
+        initCounters();
+
+        if ( (true == m_bCanContinueWithRain) ||
+             (true == m_bCanContinueWithInDoor) ||
+             (true == m_bCanContinueWithOutDoor) ||
+             (true == m_bCanContinueWithWind) ||
+             (true == m_bCanContinueWithAddInDoor) ) {
+
+            cout << endl << endl << "Pass " << (m_limitCount+1) << " sleep " << SLEEP_TIME_TWO_TASKS << " seconds" << endl ;
+            QThread::sleep(SLEEP_TIME_TWO_TASKS);
+            cout << gConfig.getModuleNetatmoMain()->id().toStdString() << " Get initial indoor measures from " << gConfig.getModuleNetatmoMain()->startDate() << endl ;
+            m_pNetatmoDeviceWS = QSharedPointer<NetatmoGetDeviceMeasuresWS>( new NetatmoGetDeviceMeasuresWS(m_token,
+                                                                                                            gConfig.getModuleNetatmoMain()->startDate(),
+                                                                                                            gConfig.getModuleNetatmoMain()->id(),
+                                                                                                            this) );
+
+            m_pNetatmoDeviceWS->start();
+
+        } else {
+            cout << endl << endl << "Pass " << (m_limitCount+1) << " End Of Download" << endl ;
+            m_currentBotLogs.stop_timestamp = QDateTime::currentDateTime().toTime_t();
+            persistCurrentLogs();
+
+            emit finished();
+
+        }
+    }
+}
+

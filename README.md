@@ -1,4 +1,7 @@
+#
 # NetatmoDownloader
+# ptrognon@gmail.com
+#
 Qt utilities to download netatmo measures (Rain, Wind, CO2, Noise, Temperature ...)
 
 open MeasuresDownloader.pro with Qt Creator, follow wizard to create project, compile it.

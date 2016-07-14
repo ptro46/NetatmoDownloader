@@ -65,6 +65,9 @@ Config::loadConfig(QString configFilename) {
     m_dbName =  dictAccount["dbName"].toString();
     m_mainDeviceId = dictAccount["mainDevice"].toString();
 
+    QJsonObject dictDownloader = map["downloader"].toObject();
+    m_limit = dictDownloader["limit"].toInt() ;
+
     QJsonArray arrayDevices = map["devices"].toArray();
     int index=0;
     for(auto item:arrayDevices) {
