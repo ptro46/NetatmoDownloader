@@ -264,13 +264,14 @@ TaskBotGetMeasures::endTaskOrContinue() {
 
         }
     } else {
-        initCounters();
 
         if ( (true == m_bCanContinueWithRain) ||
              (true == m_bCanContinueWithInDoor) ||
              (true == m_bCanContinueWithOutDoor) ||
              (true == m_bCanContinueWithWind) ||
              (true == m_bCanContinueWithAddInDoor) ) {
+
+            initCounters();
 
             cout << endl << endl << "Pass " << (m_limitCount+1) << " sleep " << SLEEP_TIME_TWO_TASKS << " seconds" << endl ;
             QThread::sleep(SLEEP_TIME_TWO_TASKS);
