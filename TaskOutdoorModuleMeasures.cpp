@@ -271,6 +271,7 @@ TaskBotGetMeasures::endTaskOrContinue() {
              (true == m_bCanContinueWithWind) ||
              (true == m_bCanContinueWithAddInDoor) ) {
 
+            m_limitCount++;
             initCounters();
 
             cout << endl << endl << "Pass " << (m_limitCount+1) << " sleep " << SLEEP_TIME_TWO_TASKS << " seconds" << endl ;
