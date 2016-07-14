@@ -220,5 +220,8 @@ TaskBotGetMeasures::onNetatmoWindFailed(int httpCode,QByteArray& contentResult) 
 
     cout << "TaskBotGetMeasures::onNetatmoWindFailed " << httpCode << " " << content.toStdString() << endl ;
 
+    m_currentBotLogs.stop_timestamp = QDateTime::currentDateTime().toTime_t();
+    persistCurrentLogs();
+
     emit finished();
 }

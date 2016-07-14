@@ -191,6 +191,8 @@ TaskBotGetMeasures::onNetatmoPluviometrieFailed(int httpCode,QByteArray& content
     QString content = contentResult ;
 
     cout << "TaskBotGetMeasures::onNetatmoPluviometrieFailed " << httpCode << " " << content.toStdString() << endl ;
+    m_currentBotLogs.stop_timestamp = QDateTime::currentDateTime().toTime_t();
+    persistCurrentLogs();
 
     emit finished();
 }

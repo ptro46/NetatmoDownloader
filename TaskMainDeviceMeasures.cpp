@@ -226,6 +226,9 @@ TaskBotGetMeasures::onNetatmoDeviceMeasuresFailed(int httpCode,QByteArray& conte
 
     cout << "TaskBotGetMeasures::onNetatmoDeviceMeasuresFailed " << httpCode << " " << content.toStdString() << endl ;
 
+    m_currentBotLogs.stop_timestamp = QDateTime::currentDateTime().toTime_t();
+    persistCurrentLogs();
+
     emit finished();
 }
 

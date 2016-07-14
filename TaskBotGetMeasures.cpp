@@ -433,7 +433,6 @@ TaskBotGetMeasures::onNetatmoAuthSucceeded(int httpCode,QByteArray& contentResul
                                                                                                           this) );
     }
     m_pNetatmoStationsDataWS->start();
-    //    emit finished();
 }
 
 void

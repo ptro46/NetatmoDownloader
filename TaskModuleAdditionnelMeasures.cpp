@@ -206,6 +206,9 @@ TaskBotGetMeasures::onNetatmoModuleAdditionnelFailed(int httpCode,QByteArray& co
 
     cout << "TaskBotGetMeasures::onNetatmoModuleAdditionnelFailed " << httpCode << " " << content.toStdString() << endl ;
 
+    m_currentBotLogs.stop_timestamp = QDateTime::currentDateTime().toTime_t();
+    persistCurrentLogs();
+
     emit finished();
 
 }
