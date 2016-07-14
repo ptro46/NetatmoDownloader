@@ -29,7 +29,6 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     Q_UNUSED(msg)
 }
 
-
 int main(int argc, char *argv[])
 {
     QString configFileName ;
