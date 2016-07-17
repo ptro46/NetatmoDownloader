@@ -52,14 +52,18 @@ WSLimitManager::waitTime10SecondsLimit() const {
     QSharedPointer<WSEntry> lastWebService = m_webServices.last();
 
     auto it = m_webServices.rbegin();
-    while ( (waitDuration == 0) && (it != m_webServices.rend()) ) {
+    while ( it != m_webServices.rend() ) {
         auto wsEntry = *it++;
-        count++;
-        long timeElapsed = lastWebService->getTimestamp() - wsEntry->getTimestamp() ;
-        if ( timeElapsed > 10L && count > m_every10SecondsLimit ) {
-            waitDuration = 10L ;
+        if ( wsEntry->getTimestamp() >= lastWebService->getTimestamp() - 10 ) {
+            count++;
+        } else {
+            break;
         }
     }
+    if ( count > m_every10SecondsLimit ) {
+        waitDuration = 10L ;
+    }
+
     return waitDuration;
 }
 
@@ -70,13 +74,17 @@ WSLimitManager::waitTimeHourLimit() const {
     QSharedPointer<WSEntry> lastWebService = m_webServices.last();
 
     auto it = m_webServices.rbegin();
-    while ( (waitDuration == 0) && (it != m_webServices.rend()) ) {
+    while ( it != m_webServices.rend() ) {
         auto wsEntry = *it++;
-        count++;
-        long timeElapsed = lastWebService->getTimestamp() - wsEntry->getTimestamp() ;
-        if ( timeElapsed > 3600L && count > m_everyHourLimit ) {
-            waitDuration = 3600L / 2 ;
+        if ( wsEntry->getTimestamp() >= lastWebService->getTimestamp() - 3600 ) {
+            count++;
+        } else {
+            break;
         }
     }
+    if ( count > m_everyHourLimit ) {
+        waitDuration = 3600L / 2 ;
+    }
+
     return waitDuration;
 }

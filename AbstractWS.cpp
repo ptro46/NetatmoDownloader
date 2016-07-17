@@ -79,7 +79,7 @@ void AbstractWS::start() {
 
     long waitLimit10Seconds = pgLimitManager->waitTime10SecondsLimit();
     if ( waitLimit10Seconds > 0 ) {
-        cout << "Limit "
+        cout << "*-*-*-*-*-*-*-*-*-*- Limit "
              << gConfig.getNetatmoPerUserLimitEvery10Seconds()
              << " requests every 10 seconds expected, sleep "
              << waitLimit10Seconds
@@ -89,7 +89,7 @@ void AbstractWS::start() {
     } else {
         long waitLimitHour = pgLimitManager->waitTimeHourLimit();
         if ( waitLimitHour > 0 ) {
-            cout << "Limit "
+            cout << "*-*-*-*-*-*-*-*-*-*- Limit "
                  << gConfig.getNetatmoPerUserLimitEveryHour()
                  << " requests every hour expected, sleep "
                  << waitLimitHour
