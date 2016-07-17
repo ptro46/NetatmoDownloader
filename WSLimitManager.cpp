@@ -87,7 +87,7 @@ WSLimitManager::waitTimeHourLimit() const {
     }
     cout << count << " querys last hour" << endl;
     if ( count > m_everyHourLimit ) {
-        waitDuration = 3600L / 2 ;
+        waitDuration = 3600L ;
     }
 
     return waitDuration;
