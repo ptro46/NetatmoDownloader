@@ -8,7 +8,9 @@
         "mainDevice" : "YOUR_MAIN_DEVICE_ID"
     },
     "downloader" : {
-        "limit" : 5
+        "netatmoPerUserLimitEvery10Seconds" : 50,
+        "netatmoPerUserLimitEveryHour" : 500,
+        "limit" : 5,
     },
     "devices" : [
         {

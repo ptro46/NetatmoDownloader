@@ -83,6 +83,8 @@ private:
     QString                                 m_clientSecret;
     QString                                 m_dbName;
     QString                                 m_mainDeviceId;
+    int                                     m_netatmoPerUserLimitEvery10Seconds;
+    int                                     m_netatmoPerUserLimitEveryHour;
     int                                     m_limit;
 
     int                                     m_indexMainDevice;
@@ -117,6 +119,8 @@ public:
     QString                         getClientSecret() const ;
     QString                         getDbName() const ;
     QString                         getMainDeviceId() const ;
+    int                             getNetatmoPerUserLimitEvery10Seconds() const ;
+    int                             getNetatmoPerUserLimitEveryHour() const ;
     int                             getLimit() const ;
 
     void                            setModuleNetatmoMain(QSharedPointer<ConfigModule> from, QString id, QString name, long startDate);
@@ -193,6 +197,19 @@ int
 Config::getLimit() const {
     return m_limit;
 }
+
+inline
+int
+Config::getNetatmoPerUserLimitEvery10Seconds() const {
+    return m_netatmoPerUserLimitEvery10Seconds;
+}
+
+inline
+int
+Config::getNetatmoPerUserLimitEveryHour() const {
+    return m_netatmoPerUserLimitEveryHour;
+}
+
 
 inline
 QSharedPointer<ConfigModule>

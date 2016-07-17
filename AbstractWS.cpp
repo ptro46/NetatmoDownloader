@@ -20,6 +20,10 @@
 //
 
 #include "AbstractWS.h"
+#include "WSLimitManager.h"
+#include "Config.h"
+#include <iostream>
+using namespace std;
 
 AbstractWS::AbstractWS(QObject *parent) : QObject(parent),m_reply(NULL) {
     connect(&m_networkTimer,SIGNAL(timeout()),this,SLOT(downloadTimeout()));
@@ -66,6 +70,33 @@ void AbstractWS::start() {
     headers=getHttpHeaders();
     foreach( QString key, headers.keys() ) {
         request.setRawHeader(key.toUtf8(), headers.value( key ).toUtf8());
+    }
+
+    pgLimitManager->addWebService(QDateTime::currentDateTime().toTime_t(),
+                                  getHttpMethod(),
+                                  getURL(),
+                                  jsonContent);
+
+    long waitLimit10Seconds = pgLimitManager->waitTime10SecondsLimit();
+    if ( waitLimit10Seconds > 0 ) {
+        cout << "Limit "
+             << gConfig.getNetatmoPerUserLimitEvery10Seconds()
+             << " requests every 10 seconds expected, sleep "
+             << waitLimit10Seconds
+             << "seconds"
+             << endl ;
+        QThread::sleep(waitLimit10Seconds);
+    } else {
+        long waitLimitHour = pgLimitManager->waitTimeHourLimit();
+        if ( waitLimitHour > 0 ) {
+            cout << "Limit "
+                 << gConfig.getNetatmoPerUserLimitEveryHour()
+                 << " requests every hour expected, sleep "
+                 << waitLimitHour
+                 << "seconds"
+                 << endl ;
+            QThread::sleep(waitLimitHour);
+        }
     }
 
     switch(getHttpMethod()) {

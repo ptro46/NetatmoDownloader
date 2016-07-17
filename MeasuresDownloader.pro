@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     TaskModuleAdditionnelMeasures.cpp \
     AbstractWS.cpp \
     NADevice.cpp \
-    NAModule.cpp
+    NAModule.cpp \
+    WSLimitManager.cpp
 
 HEADERS += \
     BotLogs.h \
@@ -49,7 +50,8 @@ HEADERS += \
     NetatmoGetModuleAdditionnelWS.h \
     AbstractWS.h \
     NADevice.h \
-    NAModule.h
+    NAModule.h \
+    WSLimitManager.h
 
 DISTFILES += \
     config.json \

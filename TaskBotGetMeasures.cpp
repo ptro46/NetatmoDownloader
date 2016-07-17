@@ -28,6 +28,7 @@
 using namespace std;
 
 #include "Config.h"
+#include "WSLimitManager.h"
 
 #include "NADevice.h"
 #include "NAModule.h"
@@ -51,6 +52,9 @@ TaskBotGetMeasures::TaskBotGetMeasures(bool showConfig, QString configFileName, 
 
     gConfig.loadConfig(m_configFileName);
     cout << gConfig << endl ;
+
+    pgLimitManager = QSharedPointer<WSLimitManager>(new WSLimitManager(gConfig.getNetatmoPerUserLimitEvery10Seconds(),
+                                                                       gConfig.getNetatmoPerUserLimitEveryHour()) );
 
     m_pNetatmoAuthWS = QSharedPointer<NetatmoAuthWS>( new NetatmoAuthWS(gConfig.getLogin(),
                                                                         gConfig.getPassword(),

@@ -67,6 +67,9 @@ Config::loadConfig(QString configFilename) {
 
     QJsonObject dictDownloader = map["downloader"].toObject();
     m_limit = dictDownloader["limit"].toInt() ;
+    m_netatmoPerUserLimitEvery10Seconds = dictDownloader["netatmoPerUserLimitEvery10Seconds"].toInt() ;
+    m_netatmoPerUserLimitEveryHour = dictDownloader["netatmoPerUserLimitEveryHour"].toInt() ;
+
 
     QJsonArray arrayDevices = map["devices"].toArray();
     int index=0;
