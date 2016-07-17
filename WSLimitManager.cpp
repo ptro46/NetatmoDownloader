@@ -20,6 +20,8 @@
 //
 
 #include "WSLimitManager.h"
+#include <iostream>
+using namespace std;
 
 QSharedPointer<WSLimitManager>   pgLimitManager;
 
@@ -60,6 +62,7 @@ WSLimitManager::waitTime10SecondsLimit() const {
             break;
         }
     }
+    cout << count << " querys last 10 seconds" << endl;
     if ( count > m_every10SecondsLimit ) {
         waitDuration = 10L ;
     }
@@ -82,6 +85,7 @@ WSLimitManager::waitTimeHourLimit() const {
             break;
         }
     }
+    cout << count << " querys last hour" << endl;
     if ( count > m_everyHourLimit ) {
         waitDuration = 3600L / 2 ;
     }
