@@ -147,7 +147,7 @@ TaskBotGetMeasures::onNetatmoModuleMeasuresSucceeded(int httpCode,QByteArray& co
                                                                                                          gConfig.getModuleNetatmoMain()->id(),
                                                                                                          gConfig.getModuleNetatmoOutdoor()->id(),
                                                                                                          this) );
-        m_pNetatmoModulesWS->start();
+        m_pNetatmoModulesWS->start(&m_db);
 
     } else {
         cout << "Finish get outdoor measures " << endl ;
@@ -183,7 +183,7 @@ TaskBotGetMeasures::onNetatmoModuleMeasuresSucceeded(int httpCode,QByteArray& co
                                                                                                                 gConfig.getModuleNetatmoMain()->id(),
                                                                                                                 gConfig.getModuleNetatmoRain()->id(),
                                                                                                                 this) );
-            m_pNetatmoPluviometrieWS->start();
+            m_pNetatmoPluviometrieWS->start(&m_db);
 
         } else if ( ! gConfig.getModuleNetatmoWind().isNull() ) {
             QSharedPointer<ModuleLogs> moduleLogs = m_previousModuleLogs[gConfig.getModuleNetatmoWind()->id()] ;
@@ -198,7 +198,7 @@ TaskBotGetMeasures::onNetatmoModuleMeasuresSucceeded(int httpCode,QByteArray& co
                                                                                         gConfig.getModuleNetatmoMain()->id(),
                                                                                         gConfig.getModuleNetatmoWind()->id(),
                                                                                         this) );
-            m_pNetatmoWindWS->start();
+            m_pNetatmoWindWS->start(&m_db);
 
         } else if ( gConfig.getModuleNetatmoIndoorSize() > 0 ) {
             QSharedPointer<ModuleLogs> moduleLogs = m_previousModuleLogs[gConfig.getModuleNetatmoIndoor(0)->id()] ;
@@ -214,7 +214,7 @@ TaskBotGetMeasures::onNetatmoModuleMeasuresSucceeded(int httpCode,QByteArray& co
                                                                                                                               gConfig.getModuleNetatmoIndoor(0)->id(),
                                                                                                                               0,
                                                                                                                               this) );
-            m_pNetatmoModuleAdditionnelWS->start();
+            m_pNetatmoModuleAdditionnelWS->start(&m_db);
 
         } else {
             endTaskOrContinue();
@@ -257,7 +257,7 @@ TaskBotGetMeasures::endTaskOrContinue() {
                                                                                                             gConfig.getModuleNetatmoMain()->id(),
                                                                                                             this) );
 
-            m_pNetatmoDeviceWS->start();
+            m_pNetatmoDeviceWS->start(&m_db);
 
         } else {
             m_currentBotLogs.stop_timestamp = QDateTime::currentDateTime().toTime_t();
@@ -285,7 +285,7 @@ TaskBotGetMeasures::endTaskOrContinue() {
                                                                                                             gConfig.getModuleNetatmoMain()->id(),
                                                                                                             this) );
 
-            m_pNetatmoDeviceWS->start();
+            m_pNetatmoDeviceWS->start(&m_db);
 
         } else {
             cout << endl << endl << "Pass " << (m_limitCount+1) << " End Of Download" << endl ;

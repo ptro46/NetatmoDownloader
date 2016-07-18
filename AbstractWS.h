@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QNetworkReply>
 #include <qtimer.h>
+#include <QSqlDatabase>
+#include <QString>
 
 #define NETWORK_TIMEOUT 15
 
@@ -34,6 +36,17 @@ typedef enum {
     Delete = 3
 } HttpMethod ;
 
+inline QString httpMethodAsString(HttpMethod method) {
+    switch ( method ) {
+    case Get:       return "Get";
+    case Post :     return "Post";
+    case Put:       return "Put";
+    case Delete:    return "Delete";
+    }
+    return "";
+}
+
+
 class AbstractWS : public QObject
 {
     Q_OBJECT
@@ -41,7 +54,7 @@ public:
     explicit AbstractWS(QObject *parent = 0);
     virtual ~AbstractWS();
     virtual void destroy();
-    virtual void start();
+    virtual void start(QSqlDatabase* db);
 
 protected:
     virtual const QString           getURL() const = 0;
@@ -67,6 +80,10 @@ private:
     QNetworkAccessManager m_networkManager;
     QNetworkReply *m_reply;
     QTimer m_networkTimer;
+
+    QSqlDatabase    *   m_pDb;
+    int                 m_insertedId;
+
 };
 
 #endif // ABSTRACTWS_H

@@ -111,7 +111,8 @@ TaskBotGetMeasures::run() {
             cout << "Create DB" << endl ;
             QSqlQuery query(m_db);
             if ( (true == query.exec("create table botlogs(idt integer primary key autoincrement,start_timestamp int8,start_date text,stop_timestamp int8,stop_date text,main_device_count int,outdoor_device_count int,rain_module_count int,wind_module_count int,opt_module_count int)")) &&
-                 (true == query.exec("create table module_logs(idt text,begin_timestamp int8,begin_date text,end_timestamp int8,end_date text,nb_measures_inserted int)"))) {
+                 (true == query.exec("create table module_logs(idt text,begin_timestamp int8,begin_date text,end_timestamp int8,end_date text,nb_measures_inserted int)")) &&
+                 (true == query.exec("create table webservices_logs(idt integer primary key autoincrement,ws_timestamp int8,method char(6),url text,content text,status int,response text)")) ) {
 
             } else {
                 QSqlError error = checkDbQuery.lastError() ;
@@ -125,7 +126,7 @@ TaskBotGetMeasures::run() {
             cout << "DB Exist" << endl ;
         }
 
-        m_pNetatmoAuthWS->start();
+        m_pNetatmoAuthWS->start(&m_db);
 
         QEventLoop loop ;
         connect(this,SIGNAL(finished()),&loop,SLOT(quit()));
@@ -436,7 +437,7 @@ TaskBotGetMeasures::onNetatmoAuthSucceeded(int httpCode,QByteArray& contentResul
                                                                                                           gConfig.getMainDeviceId(),
                                                                                                           this) );
     }
-    m_pNetatmoStationsDataWS->start();
+    m_pNetatmoStationsDataWS->start(&m_db);
 }
 
 void
@@ -660,7 +661,7 @@ TaskBotGetMeasures::onNetatmoStationsDataDownloadMeasures(int httpCode,QByteArra
                                                                                                     gConfig.getModuleNetatmoMain()->id(),
                                                                                                     this) );
 
-    m_pNetatmoDeviceWS->start();
+    m_pNetatmoDeviceWS->start(&m_db);
 }
 
 //---

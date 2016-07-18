@@ -166,7 +166,7 @@ TaskBotGetMeasures::onNetatmoModuleAdditionnelSucceeded(int httpCode,QByteArray&
                                                                                                                           gConfig.getModuleNetatmoIndoor(currentModuleIndex)->id(),
                                                                                                                           currentModuleIndex,
                                                                                                                           this) );
-        m_pNetatmoModuleAdditionnelWS->start();
+        m_pNetatmoModuleAdditionnelWS->start(&m_db);
 
     } else {
         int nextModuleIndex = currentModuleIndex + 1 ;
@@ -185,7 +185,7 @@ TaskBotGetMeasures::onNetatmoModuleAdditionnelSucceeded(int httpCode,QByteArray&
                                                                                                                               gConfig.getModuleNetatmoIndoor(nextModuleIndex)->id(),
                                                                                                                               nextModuleIndex,
                                                                                                                               this) );
-            m_pNetatmoModuleAdditionnelWS->start();
+            m_pNetatmoModuleAdditionnelWS->start(&m_db);
 
         } else {
             endTaskOrContinue();

@@ -24,6 +24,7 @@
 #include "AbstractWS.h"
 #include <QLinkedList>
 #include <QSharedPointer>
+#include <QSqlDatabase>
 
 class WSEntry;
 
@@ -37,12 +38,20 @@ public:
     WSLimitManager(int every10SecondsLimit, int everyHourLimit);
     ~WSLimitManager();
 
-    void        addWebService(long timestamp, HttpMethod method, QString url, QString content) ;
+    int         addWebService(QSqlDatabase* db, long timestamp, HttpMethod method, QString url, QString content) ;
 
     long        waitTime10SecondsLimit() const ;
     long        waitTimeHourLimit() const ;
 };
 
+// create table webservices_logs(idt integer primary key autoincrement,
+//      ws_timestamp int8,
+//      method char(6),
+//      url text,
+//      content text,
+//      status int,
+//      response text
+//  )
 class WSEntry {
 private:
     long            m_timestamp;
@@ -50,7 +59,7 @@ private:
     QString         m_url;
     QString         m_content;
 
-    friend void WSLimitManager::addWebService(long,HttpMethod,QString,QString);
+    friend int WSLimitManager::addWebService(QSqlDatabase*,long,HttpMethod,QString,QString);
     WSEntry(long timestamp, HttpMethod method, QString url, QString content);
 
 public:

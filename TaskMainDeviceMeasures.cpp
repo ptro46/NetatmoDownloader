@@ -196,7 +196,7 @@ TaskBotGetMeasures::onNetatmoDeviceMeasuresSucceeded(int httpCode,QByteArray& co
                                                                                                         gConfig.getModuleNetatmoMain()->id(),
                                                                                                         this) );
 
-        m_pNetatmoDeviceWS->start();
+        m_pNetatmoDeviceWS->start(&m_db);
 
     } else {
         cout << "Finish get indoor measures " << endl ;
@@ -212,7 +212,7 @@ TaskBotGetMeasures::onNetatmoDeviceMeasuresSucceeded(int httpCode,QByteArray& co
                                                                                                          gConfig.getModuleNetatmoMain()->id(),
                                                                                                          gConfig.getModuleNetatmoOutdoor()->id(),
                                                                                                          this) ) ;
-        m_pNetatmoModulesWS->start();
+        m_pNetatmoModulesWS->start(&m_db);
 
     }
 }

@@ -23,6 +23,8 @@
 #include <iostream>
 using namespace std;
 
+#include <QSqlQuery>
+
 QSharedPointer<WSLimitManager>   pgLimitManager;
 
 WSEntry::WSEntry(long timestamp, HttpMethod method, QString url, QString content)
@@ -42,9 +44,23 @@ WSLimitManager::~WSLimitManager() {
 
 }
 
-void
-WSLimitManager::addWebService(long timestamp, HttpMethod method, QString url, QString content) {
+int
+WSLimitManager::addWebService(QSqlDatabase* db,long timestamp, HttpMethod method, QString url, QString content) {
     m_webServices << QSharedPointer<WSEntry>(new WSEntry(timestamp,method,url,content)) ;
+
+    QSqlQuery query(*db);
+    QVariant vTimestamp = (unsigned long long)timestamp;
+    QString sql = "insert into webservices_logs(ws_timestamp,method,url,content) values(:ws_timestamp,:method,:url,:content)";
+    query.prepare(sql);
+    query.bindValue(":ws_timestamp",vTimestamp);
+    query.bindValue(":method",httpMethodAsString(method));
+    query.bindValue(":url",url);
+    query.bindValue(":content",content);
+
+    query.exec();
+
+    QVariant lastInsertId = query.lastInsertId();
+    return lastInsertId.toInt();
 }
 
 long

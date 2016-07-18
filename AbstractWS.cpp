@@ -25,6 +25,8 @@
 #include <iostream>
 using namespace std;
 
+#include <QSqlQuery>
+
 AbstractWS::AbstractWS(QObject *parent) : QObject(parent),m_reply(NULL) {
     connect(&m_networkTimer,SIGNAL(timeout()),this,SLOT(downloadTimeout()));
 }
@@ -46,7 +48,7 @@ void AbstractWS::destroy() {
     deleteLater();
 }
 
-void AbstractWS::start() {
+void AbstractWS::start(QSqlDatabase* db) {
     QUrl url(getURL());
     QNetworkRequest request(url);
     QString jsonString;
@@ -72,10 +74,12 @@ void AbstractWS::start() {
         request.setRawHeader(key.toUtf8(), headers.value( key ).toUtf8());
     }
 
-    pgLimitManager->addWebService(QDateTime::currentDateTime().toTime_t(),
-                                  getHttpMethod(),
-                                  getURL(),
-                                  jsonContent);
+    m_pDb = db ;
+    m_insertedId = pgLimitManager->addWebService(db,
+                                                 QDateTime::currentDateTime().toTime_t(),
+                                                 getHttpMethod(),
+                                                 getURL(),
+                                                 jsonContent);
 
     long waitLimit10Seconds = pgLimitManager->waitTime10SecondsLimit();
     if ( waitLimit10Seconds > 0 ) {
@@ -170,6 +174,17 @@ AbstractWS::downLoadFinished() {
         QString sba = QString(encoding);
 
         contentResult = m_reply->readAll();
+
+        QSqlQuery query(*m_pDb);
+        QVariant  vHttpCode = (int)httpCode;
+        QVariant  vIdt = (int)m_insertedId;
+        QString sql = "update webservices_logs set status=:status,response=:response where idt=:idt";
+        query.prepare(sql);
+        query.bindValue(":status",vHttpCode);
+        query.bindValue(":response",contentResult);
+        query.bindValue(":idt",vIdt);
+        query.exec();
+
 
         if ((httpCode== 200) || (httpCode== 201) || (httpCode== 204) ) {
             onSucceeded(httpCode,contentResult);

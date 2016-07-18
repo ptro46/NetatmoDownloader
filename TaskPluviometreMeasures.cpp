@@ -129,7 +129,7 @@ TaskBotGetMeasures::onNetatmoPluviometrieSucceeded(int httpCode,QByteArray& cont
                                                                                                             gConfig.getModuleNetatmoMain()->id(),
                                                                                                             gConfig.getModuleNetatmoRain()->id(),
                                                                                                             this) );
-        m_pNetatmoPluviometrieWS->start();
+        m_pNetatmoPluviometrieWS->start(&m_db);
 
     } else {
         if ( gConfig.getModuleNetatmoWind().isNull() ) {
@@ -157,7 +157,7 @@ TaskBotGetMeasures::onNetatmoPluviometrieSucceeded(int httpCode,QByteArray& cont
                                                                                         gConfig.getModuleNetatmoMain()->id(),
                                                                                         gConfig.getModuleNetatmoWind()->id(),
                                                                                         this) );
-            m_pNetatmoWindWS->start();
+            m_pNetatmoWindWS->start(&m_db);
 
         } else if ( gConfig.getModuleNetatmoIndoorSize() > 0 ) {
             QSharedPointer<ModuleLogs> moduleLogs = m_previousModuleLogs[gConfig.getModuleNetatmoIndoor(0)->id()] ;
@@ -173,7 +173,7 @@ TaskBotGetMeasures::onNetatmoPluviometrieSucceeded(int httpCode,QByteArray& cont
                                                                                                                               gConfig.getModuleNetatmoIndoor(0)->id(),
                                                                                                                               0,
                                                                                                                               this) );
-            m_pNetatmoModuleAdditionnelWS->start();
+            m_pNetatmoModuleAdditionnelWS->start(&m_db);
 
         } else {
             endTaskOrContinue();

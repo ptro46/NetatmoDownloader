@@ -178,7 +178,7 @@ TaskBotGetMeasures::onNetatmoWindSucceeded(int httpCode,QByteArray& contentResul
                                                                                     gConfig.getModuleNetatmoMain()->id(),
                                                                                     gConfig.getModuleNetatmoWind()->id(),
                                                                                     this) );
-        m_pNetatmoWindWS->start();
+        m_pNetatmoWindWS->start(&m_db);
 
     } else {
         if ( gConfig.getModuleNetatmoIndoorSize() > 0 ) {
@@ -201,7 +201,7 @@ TaskBotGetMeasures::onNetatmoWindSucceeded(int httpCode,QByteArray& contentResul
                                                                                                                               gConfig.getModuleNetatmoIndoor(0)->id(),
                                                                                                                               0,
                                                                                                                               this) );
-            m_pNetatmoModuleAdditionnelWS->start();
+            m_pNetatmoModuleAdditionnelWS->start(&m_db);
 
         } else {
             endTaskOrContinue();
