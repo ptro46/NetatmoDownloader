@@ -80,7 +80,7 @@ WSLimitManager::waitTime10SecondsLimit() const {
     }
     cout << count << " querys last 10 seconds" << endl;
     if ( count > m_every10SecondsLimit ) {
-        waitDuration = 10L ;
+        waitDuration = 10L + 3L;
     }
 
     return waitDuration;
@@ -103,7 +103,7 @@ WSLimitManager::waitTimeHourLimit() const {
     }
     cout << count << " querys last hour" << endl;
     if ( count > m_everyHourLimit ) {
-        waitDuration = 3600L ;
+        waitDuration = 3600L + (3600L/8);
     }
 
     return waitDuration;
