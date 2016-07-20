@@ -124,11 +124,20 @@ TaskBotGetMeasures::onNetatmoPluviometrieSucceeded(int httpCode,QByteArray& cont
 
     if ( (lastTimestamp <= t - 3600 * 12) && (m_pluviometrieRequestsCount < m_maxPluviometrieRequests) ) {
         cout << gConfig.getModuleNetatmoRain()->id().toStdString() << "    Get next rain measures from " << gConfig.getModuleNetatmoRain()->startDate() << endl ;
+
+        long measureInterval = PLUVIOMETRIE_MEASURE_INTERVAL ;
+        if ( false == m_pNetatmoPluviometrieWS.isNull() ) {
+            if ( m_pNetatmoPluviometrieWS->getStartDate() == gConfig.getModuleNetatmoRain()->startDate() ) {
+                measureInterval = m_pNetatmoPluviometrieWS->getMeasureInterval() * 2 ;
+            }
+        }
+
         m_pNetatmoPluviometrieWS = QSharedPointer<NetatmoGetPluviometrieWS>( new NetatmoGetPluviometrieWS(m_token,
-                                                                                                            gConfig.getModuleNetatmoRain()->startDate(),
-                                                                                                            gConfig.getModuleNetatmoMain()->id(),
-                                                                                                            gConfig.getModuleNetatmoRain()->id(),
-                                                                                                            this) );
+                                                                                                          gConfig.getModuleNetatmoRain()->startDate(),
+                                                                                                          gConfig.getModuleNetatmoMain()->id(),
+                                                                                                          gConfig.getModuleNetatmoRain()->id(),
+                                                                                                          this,
+                                                                                                          measureInterval) );
         m_pNetatmoPluviometrieWS->start(&m_db);
 
     } else {

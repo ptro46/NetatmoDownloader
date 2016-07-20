@@ -28,8 +28,9 @@ NetatmoGetPluviometrieWS::NetatmoGetPluviometrieWS(QString token,
                                                    long startDate,
                                                    QString deviceId,
                                                    QString moduleId,
-                                                   NetatmoGetPluviometrieDelegate* delegate)
-    :AbstractWS(),m_token(token),m_startDate(startDate),m_deviceId(deviceId),m_moduleId(moduleId),m_pPluviometrieDelegate(delegate)
+                                                   NetatmoGetPluviometrieDelegate* delegate,
+                                                   long measureInterval)
+    :AbstractWS(),m_token(token),m_startDate(startDate),m_deviceId(deviceId),m_moduleId(moduleId),m_pPluviometrieDelegate(delegate),m_measureInterval(measureInterval)
 {
 
 }
@@ -84,16 +85,16 @@ NetatmoGetPluviometrieWS::getRequestContent() const {
     requestContent += "&scale=max&type=Rain&date_begin=";
     requestContent += QString::number(m_startDate) ;
     requestContent += "&date_end=";
-    requestContent += QString::number(m_startDate + PLUVIOMETRIE_MEASURE_INTERVAL) ;
+    requestContent += QString::number(m_startDate + m_measureInterval) ;
     requestContent += "&optimize=false&real_time=true";
 
     QDateTime dStart = QDateTime::fromTime_t(m_startDate);
-    QDateTime dEnd   = QDateTime::fromTime_t(m_startDate + PLUVIOMETRIE_MEASURE_INTERVAL);
+    QDateTime dEnd   = QDateTime::fromTime_t(m_startDate + m_measureInterval);
 
     /*
     qDebug() << "POST " << requestContent ;
     qDebug() << "From : " << m_startDate << "(" << dStart.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
-    qDebug() << "To   : " << (m_startDate + PLUVIOMETRIE_MEASURE_INTERVAL) << "(" << dEnd.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
+    qDebug() << "To   : " << (m_startDate + m_measureInterval) << "(" << dEnd.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
     */
     return requestContent ;
 }

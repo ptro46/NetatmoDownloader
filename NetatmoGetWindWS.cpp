@@ -28,8 +28,9 @@ NetatmoGetWindWS::NetatmoGetWindWS(QString token,
                                    long startDate,
                                    QString deviceId,
                                    QString moduleId,
-                                   NetatmoGetWindDelegate* delegate)
-    :AbstractWS(),m_token(token),m_startDate(startDate),m_deviceId(deviceId),m_moduleId(moduleId),m_pWindDelegate(delegate)
+                                   NetatmoGetWindDelegate* delegate,
+                                   long measureInterval)
+    :AbstractWS(),m_token(token),m_startDate(startDate),m_deviceId(deviceId),m_moduleId(moduleId),m_pWindDelegate(delegate),m_measureInterval(measureInterval)
 {
 
 }
@@ -84,16 +85,16 @@ NetatmoGetWindWS::getRequestContent() const {
     requestContent += "&scale=max&type=WindStrength,WindAngle,GustStrength,GustAngle&date_begin=";
     requestContent += QString::number(m_startDate) ;
     requestContent += "&date_end=";
-    requestContent += QString::number(m_startDate + WIND_MEASURE_INTERVAL) ;
+    requestContent += QString::number(m_startDate + m_measureInterval) ;
     requestContent += "&optimize=false&real_time=true";
 
     QDateTime dStart = QDateTime::fromTime_t(m_startDate);
-    QDateTime dEnd   = QDateTime::fromTime_t(m_startDate + WIND_MEASURE_INTERVAL);
+    QDateTime dEnd   = QDateTime::fromTime_t(m_startDate + m_measureInterval);
 
     /*
     qDebug() << "POST " << requestContent ;
     qDebug() << "From : " << m_startDate << "(" << dStart.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
-    qDebug() << "To   : " << (m_startDate + Wind_MEASURE_INTERVAL) << "(" << dEnd.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
+    qDebug() << "To   : " << (m_startDate + m_measureInterval) << "(" << dEnd.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
     */
     return requestContent ;
 }

@@ -41,8 +41,12 @@ public:
                                         long startDate,
                                         QString deviceId,
                                         QString moduleId,
-                                        NetatmoGetModuleMeasuresDelegate* delegate);
+                                        NetatmoGetModuleMeasuresDelegate* delegate,
+                                        long measureInterval = MODULE_MEASURE_INTERVAL);
     virtual ~NetatmoGetModuleMeasuresWS();
+
+    long    getStartDate() const            { return m_startDate; }
+    long    getMeasureInterval() const      { return m_measureInterval; }
 
 protected:
     virtual const QString getURL() const;
@@ -61,6 +65,7 @@ private:
     QString                             m_deviceId;
     QString                             m_moduleId;
     NetatmoGetModuleMeasuresDelegate *  m_pModuleDelegate;
+    long                                m_measureInterval;
 
 signals:
     void    finished();

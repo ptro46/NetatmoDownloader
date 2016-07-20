@@ -29,8 +29,9 @@ NetatmoGetModuleAdditionnelWS::NetatmoGetModuleAdditionnelWS(QString token,
                                                    QString deviceId,
                                                    QString moduleId,
                                                    int moduleIndex,
-                                                   NetatmoGetModuleAdditionnelDelegate* delegate)
-    :AbstractWS(),m_token(token),m_startDate(startDate),m_deviceId(deviceId),m_moduleId(moduleId),m_moduleIndex(moduleIndex),m_pModuleAdditionnelDelegate(delegate)
+                                                   NetatmoGetModuleAdditionnelDelegate* delegate,
+                                                   long measureInterval)
+    :AbstractWS(),m_token(token),m_startDate(startDate),m_deviceId(deviceId),m_moduleId(moduleId),m_moduleIndex(moduleIndex),m_pModuleAdditionnelDelegate(delegate),m_measureInterval(measureInterval)
 {
 
 }
@@ -85,16 +86,16 @@ NetatmoGetModuleAdditionnelWS::getRequestContent() const {
     requestContent += "&scale=max&type=Temperature,CO2,Humidity&date_begin=";
     requestContent += QString::number(m_startDate) ;
     requestContent += "&date_end=";
-    requestContent += QString::number(m_startDate + INDOOR_MEASURE_INTERVAL) ;
+    requestContent += QString::number(m_startDate + m_measureInterval) ;
     requestContent += "&optimize=false&real_time=true";
 
     QDateTime dStart = QDateTime::fromTime_t(m_startDate);
-    QDateTime dEnd   = QDateTime::fromTime_t(m_startDate + INDOOR_MEASURE_INTERVAL);
+    QDateTime dEnd   = QDateTime::fromTime_t(m_startDate + m_measureInterval);
 
     /*
     qDebug() << "POST " << requestContent ;
     qDebug() << "From : " << m_startDate << "(" << dStart.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
-    qDebug() << "To   : " << (m_startDate + ModuleAdditionnel_MEASURE_INTERVAL) << "(" << dEnd.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
+    qDebug() << "To   : " << (m_startDate + m_measureInterval) << "(" << dEnd.toString("yyyy-MM-dd hh:mm:ss") << ")" ;
     */
     return requestContent ;
 }

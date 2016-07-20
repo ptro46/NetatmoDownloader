@@ -142,11 +142,20 @@ TaskBotGetMeasures::onNetatmoModuleMeasuresSucceeded(int httpCode,QByteArray& co
 
     if ( (lastTimestamp <= t - 3600 * 12) && (m_deviceOutDoorRequestsCount < m_maxDeviceOutDoorRequests) ) {
         cout << gConfig.getModuleNetatmoOutdoor()->id().toStdString() << "    Get next outdoor measures from " << gConfig.getModuleNetatmoOutdoor()->startDate() << endl ;
+
+        long measureInterval = MODULE_MEASURE_INTERVAL ;
+        if ( false == m_pNetatmoModulesWS.isNull() ) {
+            if ( m_pNetatmoModulesWS->getStartDate() == gConfig.getModuleNetatmoOutdoor()->startDate() ) {
+                measureInterval = m_pNetatmoModulesWS->getMeasureInterval() * 2 ;
+            }
+        }
+
         m_pNetatmoModulesWS = QSharedPointer<NetatmoGetModuleMeasuresWS>( new NetatmoGetModuleMeasuresWS(m_token,
                                                                                                          gConfig.getModuleNetatmoOutdoor()->startDate(),
                                                                                                          gConfig.getModuleNetatmoMain()->id(),
                                                                                                          gConfig.getModuleNetatmoOutdoor()->id(),
-                                                                                                         this) );
+                                                                                                         this,
+                                                                                                         measureInterval) );
         m_pNetatmoModulesWS->start(&m_db);
 
     } else {

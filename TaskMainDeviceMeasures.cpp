@@ -91,6 +91,7 @@ TaskBotGetMeasures::onNetatmoDeviceMeasuresSucceeded(int httpCode,QByteArray& co
     if ( lastTimestamp == 0L ) {
         gConfig.getModuleNetatmoMain()->setStartDate(gConfig.getModuleNetatmoMain()->startDate() + DEVICE_MEASURE_INTERVAL);
         lastTimestamp = gConfig.getModuleNetatmoMain()->startDate();
+
     } else {
         gConfig.getModuleNetatmoMain()->setStartDate( lastTimestamp ) ;
 
@@ -191,10 +192,19 @@ TaskBotGetMeasures::onNetatmoDeviceMeasuresSucceeded(int httpCode,QByteArray& co
 
     if ( (lastTimestamp <= t - 3600 * 12) && (m_deviceInDoorRequestsCount < m_maxDeviceInDoorRequests) ) {
         cout <<  gConfig.getModuleNetatmoMain()->id().toStdString() << "    Get next indoor measures from " << gConfig.getModuleNetatmoMain()->startDate() << endl ;
+
+        long measureInterval = DEVICE_MEASURE_INTERVAL ;
+        if ( false == m_pNetatmoDeviceWS.isNull() ) {
+            if ( m_pNetatmoDeviceWS->getStartDate() == gConfig.getModuleNetatmoMain()->startDate() ) {
+                measureInterval = m_pNetatmoDeviceWS->getMeasureInterval() * 2 ;
+            }
+        }
+
         m_pNetatmoDeviceWS = QSharedPointer<NetatmoGetDeviceMeasuresWS>( new NetatmoGetDeviceMeasuresWS(m_token,
                                                                                                         gConfig.getModuleNetatmoMain()->startDate(),
                                                                                                         gConfig.getModuleNetatmoMain()->id(),
-                                                                                                        this) );
+                                                                                                        this,
+                                                                                                        measureInterval) );
 
         m_pNetatmoDeviceWS->start(&m_db);
 

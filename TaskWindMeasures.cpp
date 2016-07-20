@@ -173,11 +173,20 @@ TaskBotGetMeasures::onNetatmoWindSucceeded(int httpCode,QByteArray& contentResul
 
     if ( (lastTimestamp <= t - 3600 * 12) && (m_deviceWindRequestsCount < m_maxDeviceWindRequests) ) {
         cout << "    Get next wind measures from " << gConfig.getModuleNetatmoWind()->startDate() << endl ;
+
+        long measureInterval = WIND_MEASURE_INTERVAL ;
+        if ( false == m_pNetatmoWindWS.isNull() ) {
+            if ( m_pNetatmoWindWS->getStartDate() == gConfig.getModuleNetatmoWind()->startDate() ) {
+                measureInterval = m_pNetatmoWindWS->getMeasureInterval() * 2 ;
+            }
+        }
+
         m_pNetatmoWindWS = QSharedPointer<NetatmoGetWindWS>( new NetatmoGetWindWS(m_token,
-                                                                                    gConfig.getModuleNetatmoWind()->startDate(),
-                                                                                    gConfig.getModuleNetatmoMain()->id(),
-                                                                                    gConfig.getModuleNetatmoWind()->id(),
-                                                                                    this) );
+                                                                                  gConfig.getModuleNetatmoWind()->startDate(),
+                                                                                  gConfig.getModuleNetatmoMain()->id(),
+                                                                                  gConfig.getModuleNetatmoWind()->id(),
+                                                                                  this,
+                                                                                  measureInterval) );
         m_pNetatmoWindWS->start(&m_db);
 
     } else {

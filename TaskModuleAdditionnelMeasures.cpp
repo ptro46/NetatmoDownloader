@@ -160,12 +160,22 @@ TaskBotGetMeasures::onNetatmoModuleAdditionnelSucceeded(int httpCode,QByteArray&
     if ( (lastTimestamp <= t - 3600 * 12) && (m_deviceAddInDoorRequestsCount < m_maxDeviceAddInDoorRequests) ) {
         cout << "currentIndex(" << currentModuleIndex << "/" << gConfig.getModuleNetatmoIndoorSize() << ")" << endl ;
         cout << gConfig.getModuleNetatmoIndoor(currentModuleIndex)->id().toStdString() << "    Get next indoor measures from " << gConfig.getModuleNetatmoIndoor(currentModuleIndex)->startDate() << endl ;
+
+        long measureInterval = INDOOR_MEASURE_INTERVAL ;
+        if ( false == m_pNetatmoModuleAdditionnelWS.isNull() ) {
+            if ( m_pNetatmoModuleAdditionnelWS->getStartDate() == gConfig.getModuleNetatmoIndoor(currentModuleIndex)->startDate() ) {
+                measureInterval = m_pNetatmoModuleAdditionnelWS->getMeasureInterval() * 2 ;
+            }
+        }
+
+
         m_pNetatmoModuleAdditionnelWS = QSharedPointer<NetatmoGetModuleAdditionnelWS>( new NetatmoGetModuleAdditionnelWS(m_token,
-                                                                                                                          gConfig.getModuleNetatmoIndoor(currentModuleIndex)->startDate(),
-                                                                                                                          gConfig.getModuleNetatmoMain()->id(),
-                                                                                                                          gConfig.getModuleNetatmoIndoor(currentModuleIndex)->id(),
-                                                                                                                          currentModuleIndex,
-                                                                                                                          this) );
+                                                                                                                         gConfig.getModuleNetatmoIndoor(currentModuleIndex)->startDate(),
+                                                                                                                         gConfig.getModuleNetatmoMain()->id(),
+                                                                                                                         gConfig.getModuleNetatmoIndoor(currentModuleIndex)->id(),
+                                                                                                                         currentModuleIndex,
+                                                                                                                         this,
+                                                                                                                         measureInterval) );
         m_pNetatmoModuleAdditionnelWS->start(&m_db);
 
     } else {
